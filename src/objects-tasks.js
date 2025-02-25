@@ -92,8 +92,10 @@ function compareObjects(obj1, obj2) {
  *    isEmptyObject({}) => true
  *    isEmptyObject({a: 1}) => false
  */
-function isEmptyObject(/* obj */) {
-  throw new Error('Not implemented');
+function isEmptyObject(obj) {
+  return (
+    typeof obj === 'object' && obj !== null && Object.keys(obj).length === 0
+  );
 }
 
 /**
