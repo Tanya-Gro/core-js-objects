@@ -200,6 +200,7 @@ class Rect {
 function Rectangle(width, height) {
   return new Rect(width, height);
 }
+
 /**
  * Returns the JSON representation of specified object
  *
@@ -210,8 +211,8 @@ function Rectangle(width, height) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { height: 10, width: 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 /**
