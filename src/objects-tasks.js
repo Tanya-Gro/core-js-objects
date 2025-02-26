@@ -361,32 +361,99 @@ function group(array, keySelector, valueSelector) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  tag: '',
+  elementUsed: false,
+  idUsed: false,
+  pseudoElementUsed: false,
+  lastOrder: 0,
+
+  element(value) {
+    if (this.elementUsed)
+      throw new Error(
+        'Element, id and pseudo-element should not occur more then one time inside the selector'
+      );
+    this.checkOrder(1);
+    const obj = this.copyObj();
+    obj.elementUsed = true;
+    obj.lastOrder = 1;
+    obj.tag += value;
+    return obj;
+  },
+  id(value) {
+    if (this.idUsed)
+      throw new Error(
+        'Element, id and pseudo-element should not occur more then one time inside the selector'
+      );
+    this.checkOrder(2);
+    const obj = this.copyObj();
+    obj.idUsed = true;
+    obj.lastOrder = 2;
+    obj.tag += `#${value}`;
+    return obj;
+  },
+  class(value) {
+    this.checkOrder(3);
+    const obj = this.copyObj();
+    obj.lastOrder = 3;
+    obj.tag += `.${value}`;
+    return obj;
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    this.checkOrder(4);
+    const obj = this.copyObj();
+    obj.lastOrder = 4;
+    obj.tag += `[${value}]`;
+    return obj;
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    this.checkOrder(5);
+    const obj = this.copyObj();
+    obj.lastOrder = 5;
+    obj.tag += `:${value}`;
+    return obj;
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    if (this.pseudoElementUsed)
+      throw new Error(
+        'Element, id and pseudo-element should not occur more then one time inside the selector'
+      );
+    const obj = this.copyObj();
+    obj.lastOrder = 6;
+    obj.pseudoElementUsed = true;
+    obj.tag += `::${value}`;
+    return obj;
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  stringify() {
+    return this.tag;
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    const obj = this.copyObj();
+    obj.tag = `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+    return obj;
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  copyObj() {
+    return {
+      ...this,
+      tag: this.tag,
+      elementUsed: this.elementUsed,
+      idUsed: this.idUsed,
+      pseudoElementUsed: this.pseudoElementUsed,
+      lastOrder: this.lastOrder,
+    };
+  },
+
+  checkOrder(currentOrder) {
+    if (this.lastOrder > currentOrder) {
+      throw new Error(
+        'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element'
+      );
+    }
   },
 };
 
