@@ -380,7 +380,7 @@ const cssSelectorBuilder = {
   element(value) {
     if (this.elementUsed)
       throw new Error(
-        'Element, id and pseudo-element should not occur more then one time inside the selector'
+        'Element, id and pseudo-element should not occur more than one time inside the selector'
       );
     this.checkOrder(1);
     const obj = this.copyObj();
@@ -389,10 +389,11 @@ const cssSelectorBuilder = {
     obj.tag += value;
     return obj;
   },
+
   id(value) {
     if (this.idUsed)
       throw new Error(
-        'Element, id and pseudo-element should not occur more then one time inside the selector'
+        'Element, id and pseudo-element should not occur more than one time inside the selector'
       );
     this.checkOrder(2);
     const obj = this.copyObj();
@@ -401,6 +402,7 @@ const cssSelectorBuilder = {
     obj.tag += `#${value}`;
     return obj;
   },
+
   class(value) {
     this.checkOrder(3);
     const obj = this.copyObj();
@@ -428,7 +430,7 @@ const cssSelectorBuilder = {
   pseudoElement(value) {
     if (this.pseudoElementUsed)
       throw new Error(
-        'Element, id and pseudo-element should not occur more then one time inside the selector'
+        'Element, id and pseudo-element should not occur more than one time inside the selector'
       );
     const obj = this.copyObj();
     obj.lastOrder = 6;
